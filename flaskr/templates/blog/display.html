@@ -14,7 +14,6 @@
       {% else %}
       <h1>{{ post['title'] }}</h1>
       {% endif %}
-
       <div class="about"> by {{ post['name'] }}</div>
     </div>
     {% if g.user['id'] == post['author_id'] %}
@@ -23,4 +22,42 @@
   </header>
   <p class="body">{{ post['body'] }}</p>
 </article>
+<hr>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div>
+        <h3> कॉमेंट्स </h3>
+
+        <ul>
+          {% for comment in comments %}
+          <li> {{ comment['comment'] }} <br><span style="font-size:70%; color:gray; font-style:italic;"> {{ comment['name'] }} ( {{ comment['created'].strftime('%Y-%m-%d') }} ) </span> </li>
+          <hr>
+          {% endfor %}
+        </ul>
+
+        <form method="post" autocomplete="off">
+
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <input type="text" class="form-control" name="name" id="name" value="{{ request.form['name'] }}" placeholder="नाव" required>
+            </div>
+          </div>
+          <br>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <textarea rows="5" class="form-control" name="comment" id="comment" placeholder=" आपले कॉमेंट्स" required>{{ request.form['body'] }}</textarea>
+            </div>
+          </div>
+          <br>
+          <input type="submit" class="btn btn-primary" value=" Send ">
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content%}

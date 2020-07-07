@@ -30,6 +30,19 @@ def get_post(id, check_author=True):
 
     return post
 
+def get_comments(id, check_author=True):
+    comments = get_db().execute(
+        'SELECT c.id, name, comment, created, post_id'
+        ' FROM comments c JOIN post p ON c.post_id = p.id'
+        ' WHERE p.id = ?',
+        (id,)
+    ).fetchall()
+
+    if check_author and post['author_id'] != g.user['id']:
+        abort(403)
+
+    return comments
+
 @bp.route('/')
 def index():
     db = get_db()
@@ -43,7 +56,29 @@ def index():
 @bp.route('/<int:id>/display', methods=('GET', 'POST'))
 def display(id):
     post = get_post(id,False)
-    return render_template('blog/display.html',post=post)
+    comments = get_comments(id,False)
+
+    if request.method == 'POST':
+        name = request.form['name']
+        comment = request.form['comment']
+
+        error = None
+        if not name or not comment:
+            error = 'Name/Comment is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO comments (name, comment, post_id)'
+                ' VALUES (?, ?, ?)',
+                (name, comment, id)
+            )
+            db.commit()
+            return redirect(url_for('blog.display',id=id))
+
+    return render_template('blog/display.html', post=post, comments = comments)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
