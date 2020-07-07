@@ -10,12 +10,13 @@ from flaskr.db import get_db
 bp = Blueprint('blog', __name__)
 
 def convert_date(S):
-    S = list(map(int, S.split('-')))
-    return S
+    date = list(map(int, S.split('-')))
+    display_date = datetime.datetime(date[0],date[1],date[2]).strftime("%B %d, %Y")
+    return display_date
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'SELECT p.id, title, body, date_posted, display_date, author_id, name'
+        'SELECT p.id, title, subtitle, body, date_posted, display_date, author_id, name'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
         (id,)
@@ -33,7 +34,7 @@ def get_post(id, check_author=True):
 def index():
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, title, body, date_posted, display_date, author_id, name'
+        'SELECT p.id, title, subtitle, body, date_posted, display_date, author_id, name'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY date_posted DESC'
     ).fetchall()
@@ -49,10 +50,10 @@ def display(id):
 def create():
     if request.method == 'POST':
         title = request.form['title']
+        subtitle = request.form['subtitle']
         body = request.form['body']
         date_posted = request.form['date_posted']
-        date = convert_date(date_posted)
-        display_date = datetime.datetime(date[0],date[1],date[2]).strftime("%B %d, %Y")
+        display_date = convert_date(date_posted)
 
         error = None
         if not title or not date_posted:
@@ -63,9 +64,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, date_posted, display_date, author_id)'
-                ' VALUES (?, ?, ?, ?, ?)',
-                (title, body, date_posted, display_date, g.user['id'])
+                'INSERT INTO post (title, subtitle, body, date_posted, display_date, author_id)'
+                ' VALUES (?, ?, ?, ?, ?, ?)',
+                (title, subtitle, body, date_posted, display_date, g.user['id'])
             )
             db.commit()
             return redirect(url_for('blog.index'))
@@ -79,11 +80,13 @@ def update(id):
 
     if request.method == 'POST':
         date_posted = request.form['date_posted']
+        display_date = convert_date(date_posted)
         title = request.form['title']
+        subtitle = request.form['subtitle']
         body = request.form['body']
 
         error = None
-        if not title:
+        if not title or not date_posted:
             error = 'Title is required.'
 
         if error is not None:
@@ -91,9 +94,9 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE post SET date_posted=?, title = ?, body = ?'
+                'UPDATE post SET date_posted = ?, display_date = ? , title = ?, subtitle  = ?, body = ?'
                 ' WHERE id = ?',
-                (date_posted, title, body, id)
+                (date_posted, display_date, title, subtitle, body, id)
             )
             db.commit()
             return redirect(url_for('blog.index'))

@@ -9,8 +9,13 @@
 <article class="post">
   <header>
     <div>
+      {% if post['subtitle'] %}
+      <h1>{{ post['subtitle'] }} - {{ post['title'] }}</h1>
+      {% else %}
       <h1>{{ post['title'] }}</h1>
-      <div class="about"> by <a href="https://www.facebook.com/abhimanyu.singh.940641" target="_blank">{{ post['name'] }}</a></div>
+      {% endif %}
+
+      <div class="about"> by {{ post['name'] }}</div>
     </div>
     {% if g.user['id'] == post['author_id'] %}
     <a class="action btn btn-primary" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>

@@ -14,6 +14,7 @@ CREATE TABLE post (
   date_posted DATE NOT NULL,
   display_date TEXT NOT NULL,
   title TEXT NOT NULL,
+  subtitle TEXT,
   body TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );

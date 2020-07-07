@@ -28,6 +28,12 @@
   <br>
   <div class="control-group">
     <div class="form-group floating-label-form-group controls">
+      <input type="text" class="form-control" name="subtitle" id="subtitle" value="{{ request.form['subtitle'] }}" placeholder="Sub-Title">
+    </div>
+  </div>
+  <br>
+  <div class="control-group">
+    <div class="form-group floating-label-form-group controls">
       <!-- <label for="body">Body</label> -->
       <textarea rows="10" class="form-control" name="body" id="body" placeholder="Enter Blog Content Here">{{ request.form['body'] }}</textarea>
     </div>
