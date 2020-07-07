@@ -6,11 +6,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <meta property="og:title" content="{% block title %}{% endblock title %}" />
+  <meta property="og:title" content="{% block metatitle %}{% endblock metatitle %}" />
   <meta property="og:description" content=" डाॅ. नंदिनी देशमुख-लोंढे " />
-  <meta property="og:image" content="{{ url_for('static', filename='home.jpeg') }}" />
-  <!-- <meta property="og:image" content="https://midnightmusings.netlify.app/img/home_2.jpeg" /> -->
-
+  <meta property="og:image" content="{{ url_for('static', filename='main.jpeg') }}" />
 
   <title> My ब्लॉग </title>
 
@@ -49,7 +47,7 @@
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('{{ url_for('static', filename='home.jpeg') }}')">
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename='main.jpeg') }}')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
